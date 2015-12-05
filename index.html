@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset='utf-8'/>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=no, minimal-ui, target-densitydpi=device-dpi"/>
+    <meta http-equiv="cleartype" content="on">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    
+    <title>4-Connect</title>
+    <link rel="stylesheet" type="text/css" href="/4connect/style/game 0.0.1.css">
+    <script src="4connect/js/BoardRenderer.js"></script>
+    <script src="4connect/js/BoardModel.js"></script>
+    <script src="4connect/js/Game.js"></script>
+    <script type="text/javascript">
+    var game;
+
+    function init () {
+        console.log('init');
+
+        var canvas = initFullScreenCanvas('mainCanvas');
+        game = new Game(canvas);
+
+        if (isTouchDevice()) {
+            canvas.addEventListener('touchstart', function(e) {
+                var touch = event.targetTouches[0];
+                game.handleClick(touch.pageX, touch.pageY);
+                e.stopPropagation();
+                e.preventDefault();
+            }, false);
+        } else {
+            canvas.addEventListener('mouseup', function(e) {
+                game.handleClick(e.pageX, e.pageY);
+                e.stopPropagation();
+                e.preventDefault();
+            }, false);
+        }
+    }
+
+
+    function initFullScreenCanvas (canvasID) {
+        console.log('initFullScreenCanvas');
+
+        var canvas = document.getElementById(canvasID);
+        resizeCanvas(canvas);
+        window.addEventListener('resize', function() {
+            resizeCanvas(canvas);
+        });
+        return canvas;
+    }
+
+    function resizeCanvas(canvas) {
+        console.log('resizeCanvas');
+
+        canvas.width = document.width || document.body.clientWidth;
+        canvas.height = document.height || document.body.clientHeight;
+        game && game.handleResize();
+    }
+
+    function isTouchDevice() {
+        return ('ontouchstart' in document.documentElement);
+    }
+    
+    </script>
+</head>
+<body onload="init()">
+<canvas id="mainCanvas" width="100" height="100"></canvas>
+</body>
+</html>
